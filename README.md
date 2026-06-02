@@ -6,6 +6,18 @@ The platform answers ten core business questions: which games will have the high
 
 ---
 
+## Dashboard Screenshots
+
+| Landing Page | Executive Overview |
+|:---:|:---:|
+| ![Landing Page](reports/screenshots/01_landing_page.png) | ![Executive Overview](reports/screenshots/02_executive_overview.png) |
+
+| Attendance Forecast | Ticket Revenue Analysis |
+|:---:|:---:|
+| ![Attendance Forecast](reports/screenshots/03_attendance_forecast.png) | ![Ticket Revenue](reports/screenshots/04_ticket_revenue.png) |
+
+---
+
 ## Business Problem
 
 Sports and entertainment organizations need to forecast game-day demand and understand what drives revenue. Attendance directly affects ticket revenue, staffing costs, concessions inventory, merchandise planning, promotional ROI, and partnership value. This platform gives a business intelligence team the tools to answer demand and revenue questions at both the game level and the portfolio level — and to run what-if scenarios for operational planning.
