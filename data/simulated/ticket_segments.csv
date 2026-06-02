@@ -1,0 +1,10 @@
+segment_id,segment_name,avg_base_price,price_tier
+1,Premium Courtside,450.0,Ultra Premium
+2,Lower Bowl,185.0,Premium
+3,Club Level,220.0,Premium
+4,Upper Bowl,65.0,Value
+5,Family Pack,55.0,Value
+6,Student Promo,30.0,Discount
+7,Group Sales,72.0,Mid-Tier
+8,Season Ticket,140.0,Mid-Tier
+9,Corporate Partner Allocation,310.0,Premium

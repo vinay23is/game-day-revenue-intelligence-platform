@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: gameday_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gameday_revenue
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gameday_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gameday_revenue
+      RANDOM_SEED: 42
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./reports:/app/reports
+    command: >
+      bash -c "
+        python src/simulate_business_data.py &&
+        python src/data_cleaning.py &&
+        python src/feature_engineering.py &&
+        python src/train_attendance_model.py &&
+        python src/train_revenue_model.py &&
+        python src/segmentation.py &&
+        streamlit run dashboard/app.py --server.address=0.0.0.0
+      "
+
+volumes:
+  postgres_data:
