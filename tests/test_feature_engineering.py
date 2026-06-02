@@ -9,8 +9,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.config import DATA_PROCESSED_DIR
 from src.feature_engineering import (
-    ATTENDANCE_FEATURES, REVENUE_FEATURES,
-    ATTENDANCE_TARGET, REVENUE_TARGET
+    ATTENDANCE_FEATURES, REVENUE_PREGAME_FEATURES,
+    ATTENDANCE_TARGET, REVENUE_TARGET,
 )
 
 
@@ -39,8 +39,8 @@ def test_attendance_target_column_exists(att_features):
 
 def test_attendance_feature_columns_exist(att_features):
     for feat in ATTENDANCE_FEATURES:
-        if feat != "promotion_type":  # categorical, may be encoded
-            assert feat in att_features.columns, f"Missing feature: {feat}"
+        if feat != "promotion_type":  # categorical, present as-is
+            assert feat in att_features.columns, f"Missing attendance feature: {feat}"
 
 
 def test_attendance_target_no_nulls(att_features):
@@ -73,7 +73,7 @@ def test_attendance_boolean_flags_binary(att_features):
 
 
 # ---------------------------------------------------------------------------
-# Revenue feature set
+# Revenue pre-game feature set (no post-game leakage)
 # ---------------------------------------------------------------------------
 def test_revenue_target_column_exists(rev_features):
     assert REVENUE_TARGET in rev_features.columns
@@ -87,23 +87,37 @@ def test_revenue_target_positive(rev_features):
     assert (rev_features[REVENUE_TARGET] > 0).all()
 
 
-def test_revenue_feature_columns_exist(rev_features):
-    extra_revenue_feats = ["actual_attendance", "capacity_pct", "avg_ticket_price_all"]
-    for feat in extra_revenue_feats:
-        assert feat in rev_features.columns, f"Missing revenue feature: {feat}"
+def test_revenue_pregame_feature_columns_exist(rev_features):
+    # New pre-game only features must exist
+    required = ["rolling_rev_3", "rolling_rev_5", "planned_avg_base_price",
+                "promotion_cost", "sponsor_value_estimate"]
+    for feat in required:
+        assert feat in rev_features.columns, f"Missing pre-game revenue feature: {feat}"
+
+
+def test_revenue_no_leakage_columns(rev_features):
+    # Post-game outcomes must NOT appear as input features
+    forbidden = ["actual_attendance", "capacity_pct", "total_tickets_sold",
+                 "avg_ticket_price_all", "total_gross_ticket_revenue",
+                 "total_net_ticket_revenue", "total_concession_revenue",
+                 "total_merchandise_revenue"]
+    for col in forbidden:
+        assert col not in rev_features.columns, (
+            f"Leakage column '{col}' found in revenue feature set"
+        )
 
 
 def test_revenue_has_enough_rows(rev_features):
     assert len(rev_features) >= 5000
 
 
-def test_revenue_attendance_not_negative(rev_features):
-    assert (rev_features["actual_attendance"] >= 0).all()
+def test_rolling_revenue_features_non_negative(rev_features):
+    assert (rev_features["rolling_rev_3"] >= 0).all()
+    assert (rev_features["rolling_rev_5"] >= 0).all()
 
 
-def test_revenue_capacity_pct_range(rev_features):
-    assert (rev_features["capacity_pct"] >= 0).all()
-    assert (rev_features["capacity_pct"] <= 100).all()
+def test_planned_avg_price_positive(rev_features):
+    assert (rev_features["planned_avg_base_price"] > 0).all()
 
 
 # ---------------------------------------------------------------------------

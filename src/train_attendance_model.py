@@ -172,21 +172,68 @@ def main():
         pred_path, index=False
     )
 
-    # Write metrics report
+    # -------------------------------------------------------------------
+    # Write comprehensive model_metrics.md (attendance section)
+    # -------------------------------------------------------------------
+    from datetime import date as _date
+    feat_str = "\n".join(f"  - `{f}`" for f in available_feats)
+    fi_str = ""
+    if fi_dict:
+        fi_str = "\n**Top Feature Importances:**\n\n"
+        for feat, imp in sorted(fi_dict.items(), key=lambda x: -x[1])[:10]:
+            fi_str += f"- `{feat}`: {imp:.4f}\n"
+
     metrics_path = REPORTS_DIR / "model_metrics.md"
     content = f"""# Model Metrics Report
 
-## Attendance Prediction Models
+*All models use a time-based train/test split: earlier seasons for training,
+most recent season held out for evaluation.*
 
-| Model | MAE | RMSE | R² | MAPE |
-|-------|-----|------|----|------|
+---
+
+## Attendance Forecast Model
+
+**Purpose:** Predict the number of fans expected to attend each game before
+game day, enabling staffing decisions, inventory planning, and promotional targeting.
+
+**Target Variable:** `actual_attendance` (fans attending the game)
+
+**Pre-Game Features Used:**
+{feat_str}
+
+**Models Compared:**
+
+| Model | MAE (fans) | RMSE (fans) | R² | MAPE |
+|-------|-----------|------------|-----|------|
 """
     for r in results:
         content += f"| {r['model']} | {r['mae']:.0f} | {r['rmse']:.0f} | {r['r2']:.4f} | {r['mape']:.2f}% |\n"
-    content += f"\n**Best Model:** {best_name}  \n"
-    content += f"**Test Season:** {df['season'].max()}  \n"
-    content += f"**Train/Test Split:** Time-based (earlier seasons for training)  \n\n"
 
+    content += f"""
+**Selected Model:** {best_name}
+
+**Why Selected:** Achieves the highest R² on the held-out test season
+while maintaining interpretable error magnitudes.
+
+{fi_str}
+
+**Business Interpretation:**
+- An MAE of ~{best['mae']:.0f} fans means forecasts are typically within ±{best['mae']:.0f}
+  attendees of actual — sufficient for staffing bracket decisions (Standard / Medium / High / Maximum)
+- Rolling attendance history (`rolling_att_3`, `rolling_att_5`) captures home team momentum
+- Opponent popularity, rivalry flag, and national TV flag capture matchup-driven demand spikes
+- Weather signals provide modest but measurable adjustments for winter/storm games
+
+**Limitations:**
+- Trained on synthetic data; real accuracy depends on actual CRM and ticketing integration
+- Roster changes, late-breaking weather, and external events are not captured
+- Model should be re-calibrated at least once per season
+
+**Test Season:** {df["season"].max()}
+**Report Generated:** {_date.today().isoformat()}
+
+---
+"""
     with open(metrics_path, "w") as f:
         f.write(content)
 

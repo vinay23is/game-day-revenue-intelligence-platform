@@ -24,36 +24,36 @@ rng = np.random.default_rng(RANDOM_SEED)
 # ---------------------------------------------------------------------------
 
 TEAM_DATA = [
-    ("ATL", "Atlanta Hawks",     "Atlanta",       "East", "Southeast", "State Farm Arena",       19621, "Large",   0.72),
-    ("BOS", "Boston Celtics",    "Boston",        "East", "Atlantic",  "TD Garden",              19156, "Large",   0.91),
-    ("BKN", "Brooklyn Nets",     "Brooklyn",      "East", "Atlantic",  "Barclays Center",        17732, "Large",   0.78),
-    ("CHA", "Charlotte Hornets", "Charlotte",     "East", "Southeast", "Spectrum Center",        19077, "Medium",  0.61),
-    ("CHI", "Chicago Bulls",     "Chicago",       "East", "Central",   "United Center",          20917, "Large",   0.83),
-    ("CLE", "Cleveland Cavaliers","Cleveland",    "East", "Central",   "Rocket Mortgage Arena",  19432, "Medium",  0.74),
-    ("DAL", "Dallas Mavericks",  "Dallas",        "West", "Southwest", "American Airlines Center",19200,"Large",  0.76),
-    ("DEN", "Denver Nuggets",    "Denver",        "West", "Northwest", "Ball Arena",             19520, "Medium",  0.69),
-    ("DET", "Detroit Pistons",   "Detroit",       "East", "Central",   "Little Caesars Arena",   20491, "Medium",  0.58),
-    ("GSW", "Golden State Warriors","San Francisco","West","Pacific",  "Chase Center",           18064, "Large",   0.95),
-    ("HOU", "Houston Rockets",   "Houston",       "West", "Southwest", "Toyota Center",          18055, "Large",   0.71),
-    ("IND", "Indiana Pacers",    "Indianapolis",  "East", "Central",   "Gainbridge Fieldhouse",  17923, "Medium",  0.65),
-    ("LAC", "LA Clippers",       "Los Angeles",   "West", "Pacific",   "Crypto.com Arena",       19060, "Large",   0.73),
-    ("LAL", "LA Lakers",         "Los Angeles",   "West", "Pacific",   "Crypto.com Arena",       19060, "Large",   0.97),
-    ("MEM", "Memphis Grizzlies", "Memphis",       "West", "Southwest", "FedExForum",             17794, "Small",   0.62),
-    ("MIA", "Miami Heat",        "Miami",         "East", "Southeast", "FTX Arena",              19600, "Large",   0.84),
-    ("MIL", "Milwaukee Bucks",   "Milwaukee",     "East", "Central",   "Fiserv Forum",           17341, "Medium",  0.80),
-    ("MIN", "Minnesota Timberwolves","Minneapolis","West","Northwest", "Target Center",          18978, "Medium",  0.60),
-    ("NOP", "New Orleans Pelicans","New Orleans", "West", "Southwest", "Smoothie King Center",   16867, "Small",   0.59),
-    ("NYK", "New York Knicks",   "New York",      "East", "Atlantic",  "Madison Square Garden",  19812, "Large",   0.88),
-    ("OKC", "Oklahoma City Thunder","Oklahoma City","West","Northwest","Paycom Center",           18203, "Small",   0.67),
-    ("ORL", "Orlando Magic",     "Orlando",       "East", "Southeast", "Amway Center",           18846, "Medium",  0.57),
-    ("PHI", "Philadelphia 76ers","Philadelphia",  "East", "Atlantic",  "Wells Fargo Center",     20478, "Large",   0.81),
-    ("PHX", "Phoenix Suns",      "Phoenix",       "West", "Pacific",   "Footprint Center",       17125, "Large",   0.86),
-    ("POR", "Portland Trail Blazers","Portland",  "West", "Northwest", "Moda Center",            19393, "Medium",  0.70),
-    ("SAC", "Sacramento Kings",  "Sacramento",    "West", "Pacific",   "Golden 1 Center",        17608, "Medium",  0.63),
-    ("SAS", "San Antonio Spurs", "San Antonio",   "West", "Southwest", "AT&T Center",            18418, "Medium",  0.75),
-    ("TOR", "Toronto Raptors",   "Toronto",       "East", "Atlantic",  "Scotiabank Arena",       19800, "Large",   0.79),
-    ("UTA", "Utah Jazz",         "Salt Lake City","West", "Northwest", "Delta Center",           18206, "Medium",  0.68),
-    ("WAS", "Washington Wizards","Washington",    "East", "Southeast", "Capital One Arena",      20356, "Large",   0.66),
+    ("ATL", "Atlanta Flyers",          "Atlanta",       "East", "Southeast", "Peach State Arena",        19621, "Large",   0.72),
+    ("BOS", "Boston Harbors",          "Boston",        "East", "Atlantic",  "Harbor Center",            19156, "Large",   0.91),
+    ("BKN", "Brooklyn Bridgers",       "Brooklyn",      "East", "Atlantic",  "Bridge Arena",             17732, "Large",   0.78),
+    ("CHA", "Charlotte Crowns",        "Charlotte",     "East", "Southeast", "Crown Coliseum",           19077, "Medium",  0.61),
+    ("CHI", "Chicago Cyclones",        "Chicago",       "East", "Central",   "Lakefront Center",         20917, "Large",   0.83),
+    ("CLE", "Cleveland Comets",        "Cleveland",     "East", "Central",   "Lakeside Arena",           19432, "Medium",  0.74),
+    ("DAL", "Dallas Wranglers",        "Dallas",        "West", "Southwest", "Lone Star Center",         19200, "Large",   0.76),
+    ("DEN", "Denver Peaks",            "Denver",        "West", "Northwest", "Mile High Arena",          19520, "Medium",  0.69),
+    ("DET", "Detroit Motors",          "Detroit",       "East", "Central",   "Motor City Arena",         20491, "Medium",  0.58),
+    ("GSF", "San Francisco Waves",     "San Francisco", "West", "Pacific",   "Bay Arena",                18064, "Large",   0.95),
+    ("HOU", "Houston Meteors",         "Houston",       "West", "Southwest", "Space City Center",        18055, "Large",   0.71),
+    ("IND", "Indianapolis Racers",     "Indianapolis",  "East", "Central",   "Speedway Fieldhouse",      17923, "Medium",  0.65),
+    ("LAB", "Los Angeles Blaze",       "Los Angeles",   "West", "Pacific",   "Metro Arena",              19060, "Large",   0.73),
+    ("LAS", "Los Angeles Stars",       "Los Angeles",   "West", "Pacific",   "Metro Arena",              19060, "Large",   0.97),
+    ("MEM", "Memphis Blues",           "Memphis",       "West", "Southwest", "Bluff City Forum",         17794, "Small",   0.62),
+    ("MIA", "Miami Storm",             "Miami",         "East", "Southeast", "Bayfront Arena",           19600, "Large",   0.84),
+    ("MIL", "Milwaukee Barons",        "Milwaukee",     "East", "Central",   "Lakefront Forum",          17341, "Medium",  0.80),
+    ("MIN", "Minneapolis Northstars",  "Minneapolis",   "West", "Northwest", "North Star Center",        18978, "Medium",  0.60),
+    ("NOR", "New Orleans Crescents",   "New Orleans",   "West", "Southwest", "Crescent Center",          16867, "Small",   0.59),
+    ("NYE", "New York Empire",         "New York",      "East", "Atlantic",  "Empire Garden",            19812, "Large",   0.88),
+    ("OKC", "Oklahoma City Outlaws",   "Oklahoma City", "West", "Northwest", "Prairie Center",           18203, "Small",   0.67),
+    ("ORL", "Orlando Rays",            "Orlando",       "East", "Southeast", "Sunshine Arena",           18846, "Medium",  0.57),
+    ("PHI", "Philadelphia Founders",   "Philadelphia",  "East", "Atlantic",  "Liberty Center",           20478, "Large",   0.81),
+    ("PHX", "Phoenix Firebirds",       "Phoenix",       "West", "Pacific",   "Desert Center",            17125, "Large",   0.86),
+    ("POR", "Portland Pines",          "Portland",      "West", "Northwest", "Rose District Arena",      19393, "Medium",  0.70),
+    ("SAC", "Sacramento Capitals",     "Sacramento",    "West", "Pacific",   "Capitol One Arena",        17608, "Medium",  0.63),
+    ("SAT", "San Antonio Legends",     "San Antonio",   "West", "Southwest", "Alamo Center",             18418, "Medium",  0.75),
+    ("TOR", "Toronto Towers",          "Toronto",       "East", "Atlantic",  "Tower Arena",              19800, "Large",   0.79),
+    ("SLC", "Salt Lake Summit",        "Salt Lake City","West", "Northwest", "Summit Center",            18206, "Medium",  0.68),
+    ("WAS", "Washington Republic",     "Washington",    "East", "Southeast", "Capitol Arena",            20356, "Large",   0.66),
 ]
 
 
@@ -81,12 +81,12 @@ def generate_teams() -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 RIVALRY_PAIRS = {
-    ("BOS", "NYK"), ("BOS", "PHI"), ("LAL", "LAC"), ("LAL", "GSW"),
-    ("CHI", "DET"), ("MIA", "BOS"), ("GSW", "LAL"), ("PHI", "NYK"),
-    ("CLE", "GSW"), ("CLE", "BOS"), ("MIL", "BOS"), ("PHX", "LAL"),
+    ("BOS", "NYE"), ("BOS", "PHI"), ("LAS", "LAB"), ("LAS", "GSF"),
+    ("CHI", "DET"), ("MIA", "BOS"), ("GSF", "LAS"), ("PHI", "NYE"),
+    ("CLE", "GSF"), ("CLE", "BOS"), ("MIL", "BOS"), ("PHX", "LAS"),
 }
 
-NATIONALLY_TELEVISED_TEAMS = {"LAL", "GSW", "BOS", "CHI", "MIA", "NYK", "PHI"}
+NATIONALLY_TELEVISED_TEAMS = {"LAS", "GSF", "BOS", "CHI", "MIA", "NYE", "PHI"}
 
 HOLIDAY_MONTHS = {12, 1}  # Dec-Jan holiday stretch; Feb for All-Star
 

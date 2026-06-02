@@ -20,7 +20,7 @@ Sports and entertainment organizations need to forecast game-day demand and unde
 | **Revenue Prediction** | Predict total game-day revenue (tickets + concessions + merchandise) using ensemble models |
 | **Ticket Segment Analysis** | Compare sell-through, average price, and net revenue across 9 pricing tiers |
 | **Concessions & Merchandise** | Per-cap spend, gross margin by category, and demand-based inventory recommendations |
-| **Fan Segmentation** | K-Means clustering on behavioral features to identify High-Value, Promo-Sensitive, Family, and Casual fan segments |
+| **Fan Segmentation** | K-Means clustering (k=6) on behavioral and encoded features to identify six actionable business segments |
 | **Promotion Effectiveness** | Measure attendance lift and revenue impact by promotion type |
 | **Scenario Modeling** | Interactive sliders for attendance, pricing, promotion, and demand changes with real-time revenue and inventory projections |
 | **Executive Dashboard** | Six-page Streamlit dashboard with KPI cards, Plotly charts, and drill-down tables |
@@ -46,7 +46,7 @@ Sports and entertainment organizations need to forecast game-day demand and unde
 
 ## Data
 
-This project uses public-style basketball game data concepts combined with simulated business data for ticketing, concessions, merchandise, promotions, and fan profiles. The simulated fields are designed to demonstrate sports business intelligence workflows where real internal team revenue data is private.
+This project uses **fictional professional basketball-style teams** and **simulated business data** for ticketing, concessions, merchandise, promotions, and fan profiles to demonstrate sports analytics workflows. The 30 teams, arenas, and all game-day revenue figures are entirely invented — no official league affiliation or team partnership is implied or claimed. The simulated fields are designed to reflect realistic sports business intelligence patterns where real internal team revenue data is private.
 
 **Data generated at runtime** (no external download required):
 
@@ -134,15 +134,16 @@ SQL techniques used: `JOIN`, `LEFT JOIN`, CTEs (`WITH`), window functions (`RANK
 - **Split:** Time-based — earlier seasons for training, most recent season for testing
 - **Features:** Weekend flag, rivalry flag, national TV flag, promotion flag and lift, opponent popularity, home/away team win percentages, recent form, weather, rolling 3- and 5-game attendance, arena capacity, month, day of week
 
-### Revenue Prediction
+### Pre-Game Revenue Forecast
 - **Target:** `total_game_day_revenue = net_ticket_revenue + concessions + merchandise`
 - **Models:** Same ensemble as attendance model
-- **Additional features:** Actual attendance, capacity %, average ticket price
+- **Leakage prevention:** `actual_attendance`, `capacity_pct`, `total_tickets_sold`, and all actual sales outcomes are **excluded** from input features — only features known before game day are used
+- **Pre-game features added:** rolling 3- and 5-game revenue history (lagged), planned average base ticket price (from pricing sheet + demand signals), promotion cost, sponsor value estimate
 
 ### Fan Segmentation
-- **Algorithm:** K-Means clustering with silhouette score selection (k=3–8)
-- **Features:** Games attended, ticket spend, concession spend, merchandise spend, promotion usage rate, email engagement score, fan value score
-- **Output segments:** High-Value Fans, Season Ticket Loyalists, Promo-Sensitive Fans, Family Buyers, Merchandise-Heavy Fans, Casual Low-Frequency Fans
+- **Algorithm:** K-Means clustering — silhouette scores evaluated for k=3–8, k=6 selected for business interpretability
+- **Features:** Games attended, ticket spend, concession spend, merchandise spend, promotion usage rate, email engagement score, fan value score, encoded distance from arena, encoded loyalty tier
+- **Output segments:** High-Value Loyalists, Premium Experience Buyers, Promo-Sensitive Fans, Family Night Buyers, Merchandise-Heavy Fans, Casual Low-Frequency Fans
 
 ### Evaluation Metrics
 | Metric | Usage |
@@ -257,25 +258,25 @@ After running the pipeline on 5 seasons of simulated data:
 | Random Forest | 597 | 745 | 0.7619 | 3.47% |
 | Gradient Boosting | 563 | 717 | 0.7797 | 3.28% |
 
-**Revenue Prediction (test season: 2023)**
+**Pre-Game Revenue Forecast (test season: 2023 — no post-game leakage)**
 
 | Model | MAE | RMSE | R² | MAPE |
 |-------|-----|------|----|------|
-| Linear Regression | $23,294 | $29,296 | 0.9933 | 0.61% |
-| Random Forest | $29,937 | $37,641 | 0.9889 | 0.78% |
-| Gradient Boosting | $25,771 | $32,430 | 0.9918 | 0.68% |
+| Linear Regression | $132,875 | $168,572 | 0.7773 | 3.52% |
+| Random Forest | $136,966 | $173,267 | 0.7648 | 3.63% |
+| Gradient Boosting | $129,048 | $168,149 | 0.7785 | 3.43% |
 
-**Fan Segmentation:** K=3 clusters identified via silhouette score — High-Value Fans (30%), Merchandise-Heavy Fans (35%), Family Buyers (35%).
+**Fan Segmentation:** K=6 business segments — High-Value Loyalists, Premium Experience Buyers, Promo-Sensitive Fans, Family Night Buyers, Merchandise-Heavy Fans, Casual Low-Frequency Fans.
 
 ---
 
 ## Resume Bullets
 
 - Built a sports business intelligence platform to analyze game-day attendance, ticket demand, concessions, merchandise, promotions, and projected revenue using Python, SQL, PostgreSQL, and Streamlit.
-- Designed a relational data model across 12 tables (games, teams, attendance, ticket segments, concessions, merchandise, promotions, fan profiles, and transactions) to support stakeholder-ready analytics.
-- Developed 40+ SQL queries using joins, CTEs, window functions, rankings, aggregations, and CASE statements to identify revenue drivers, attendance trends, underperforming games, and high-demand matchups.
-- Trained machine learning models (Random Forest, Gradient Boosting, Linear Regression) to forecast attendance and game-day revenue using opponent strength, seasonality, promotions, weather, team performance, and pricing features — achieving R² > 0.85 on held-out test seasons.
-- Built an interactive six-page dashboard with executive KPIs, attendance forecasting, revenue breakdowns, fan segmentation, and scenario modeling for staffing, food, merchandise, and ticketing decisions.
+- Designed a relational data model across games, teams, attendance, ticket segments, concessions, merchandise, promotions, fan profiles, and transactions to support stakeholder-ready analytics.
+- Developed 30+ SQL queries using joins, CTEs, window functions, rankings, aggregations, and CASE statements to identify revenue drivers, attendance trends, underperforming games, and high-demand matchups.
+- Trained pre-game forecasting models for attendance and game-day revenue using opponent strength, seasonality, promotions, weather, team performance, and pricing features while preventing post-game target leakage.
+- Built an interactive dashboard with executive KPIs, attendance forecasting, revenue breakdowns, fan segmentation, and scenario modeling for staffing, food, merchandise, and ticketing decisions.
 
 ---
 
