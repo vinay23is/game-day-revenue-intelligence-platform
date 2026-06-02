@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
+from src.utils import truncate
 
 st.set_page_config(page_title="Fan Segmentation", layout="wide")
 
@@ -47,10 +48,10 @@ repeat_pct   = (fan_profiles["games_attended_last_12_months"] >= 5).mean() * 100
 
 c1, c2, c3, c4, c5 = st.columns(5)
 c1.metric("Total Fan Profiles",    f"{total_fans:,}")
-c2.metric("Highest-Value Segment", best_seg)
+c2.metric("Highest-Value Segment", truncate(best_seg, 20))
 c3.metric("Avg Fan Value Score",   f"{avg_val:.3f}")
 c4.metric("Avg Promo Usage",       f"{avg_promo:.1f}%")
-c5.metric("Repeat Buyer % (5+ games)", f"{repeat_pct:.1f}%")
+c5.metric("Repeat Buyers (5+ games)", f"{repeat_pct:.1f}%")
 
 st.markdown("---")
 
@@ -86,7 +87,7 @@ with col1:
                  labels={"_segment":"Segment","fan_count":"Fan Count","avg_value":"Avg Value Score"})
     fig.update_xaxes(tickangle=-30)
     fig.update_layout(height=380)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
 
 with col2:
     fig2 = px.bar(seg_summary, x="_segment", y="avg_total_spend",
@@ -95,7 +96,7 @@ with col2:
                   labels={"_segment":"Segment","avg_total_spend":"Avg Total Spend"})
     fig2.update_xaxes(tickangle=-30)
     fig2.update_layout(height=380)
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2)
 
 col3, col4 = st.columns(2)
 
@@ -107,7 +108,7 @@ with col3:
                   labels={"_segment":"Segment","avg_promo":"Avg Promo Usage Rate"})
     fig3.update_xaxes(tickangle=-30)
     fig3.update_layout(height=380)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3)
 
 with col4:
     fig4 = px.bar(seg_summary.sort_values("avg_games", ascending=False),
@@ -117,7 +118,7 @@ with col4:
                   labels={"_segment":"Segment","avg_games":"Avg Games Attended"})
     fig4.update_xaxes(tickangle=-30)
     fig4.update_layout(height=380)
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4)
 
 # Spend breakdown grouped bar
 st.markdown("### Spend Breakdown by Segment (Tickets / Concessions / Merchandise)")
@@ -134,7 +135,7 @@ fig5 = px.bar(spend_melt.sort_values("Avg Spend", ascending=False),
               labels={"_segment":"Segment"})
 fig5.update_xaxes(tickangle=-30)
 fig5.update_layout(height=420)
-st.plotly_chart(fig5, use_container_width=True)
+st.plotly_chart(fig5)
 
 # ---------------------------------------------------------------------------
 # Segment summary table
@@ -147,6 +148,5 @@ st.dataframe(
         "avg_concession":"Avg Concession $","avg_merch":"Avg Merch $",
         "avg_total_spend":"Avg Total $","avg_promo":"Promo Usage",
         "avg_email":"Email Engagement","avg_value":"Fan Value Score"
-    }).round(2),
-    use_container_width=True
+    }).round(2)
 )

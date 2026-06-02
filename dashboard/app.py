@@ -10,6 +10,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
+from src.utils import fmt_currency, truncate
 
 st.set_page_config(
     page_title="Game-Day Revenue Intelligence",
@@ -35,9 +36,15 @@ def load_table(name: str) -> pd.DataFrame:
 # Sidebar
 # ---------------------------------------------------------------------------
 
-st.sidebar.image(
-    "https://via.placeholder.com/280x60/1a1a2e/ffffff?text=Game-Day+BI+Platform",
-    use_container_width=True,
+st.sidebar.markdown(
+    """
+    <div style="background:#1a1a2e;padding:10px 14px;border-radius:6px;margin-bottom:4px;">
+      <span style="color:#ffffff;font-size:14px;font-weight:700;letter-spacing:0.5px;">
+        🏀 Game-Day BI Platform
+      </span>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 st.sidebar.markdown("---")
 st.sidebar.markdown(
@@ -79,7 +86,8 @@ with col1:
 
 with col2:
     if not attendance.empty:
-        st.metric("Total Fan Attendance", f"{attendance['actual_attendance'].sum():,.0f}")
+        total_att = attendance["actual_attendance"].sum()
+        st.metric("Total Fan Attendance", fmt_currency(total_att).replace("$", "") + " fans")
         st.metric("Avg Capacity Utilization", f"{attendance['capacity_pct'].mean():.1f}%")
     else:
         st.metric("Total Fan Attendance", "—")
@@ -88,10 +96,10 @@ with col2:
 with col3:
     if not ticket_sales.empty:
         total_rev = ticket_sales["net_ticket_revenue"].sum()
-        st.metric("Total Ticket Revenue", f"${total_rev:,.0f}")
+        st.metric("Total Ticket Revenue", fmt_currency(total_rev))
     else:
         st.metric("Total Ticket Revenue", "—")
-    st.metric("Teams", "30 Franchises | 2 Conferences")
+    st.metric("Teams", "30 Teams · 2 Conferences")
 
 st.markdown("---")
 

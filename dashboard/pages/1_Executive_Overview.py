@@ -9,6 +9,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
+from src.utils import fmt_currency, truncate
 
 st.set_page_config(page_title="Executive Overview", layout="wide")
 
@@ -75,18 +76,18 @@ top_opp      = df.groupby("away_team_name")["capacity_pct"].mean().idxmax()
 top_loyalty  = fan_profiles.groupby("loyalty_status")["fan_value_score"].mean().idxmax() if not fan_profiles.empty else "—"
 
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total Games",     f"{total_games:,}")
-c2.metric("Total Attendance",f"{total_att:,.0f}")
-c3.metric("Avg Capacity %",  f"{avg_cap:.1f}%")
-c4.metric("Total Revenue",   f"${total_rev:,.0f}")
-c5.metric("Avg $/Attendee",  f"${avg_per_att:.2f}")
+c1.metric("Total Games",      f"{total_games:,}")
+c2.metric("Total Attendance", f"{total_att / 1_000_000:.1f}M fans")
+c3.metric("Avg Capacity %",   f"{avg_cap:.1f}%")
+c4.metric("Total Revenue",    fmt_currency(total_rev))
+c5.metric("Avg $/Attendee",   f"${avg_per_att:.2f}")
 
 c6, c7, c8, c9, c10 = st.columns(5)
-c6.metric("Ticket Revenue",  f"${total_ticket:,.0f}")
-c7.metric("Concessions",     f"${total_con:,.0f}")
-c8.metric("Merchandise",     f"${total_merch:,.0f}")
-c9.metric("Top Opponent",    top_opp)
-c10.metric("Top Fan Segment",top_loyalty)
+c6.metric("Ticket Revenue",   fmt_currency(total_ticket))
+c7.metric("Concessions",      fmt_currency(total_con))
+c8.metric("Merchandise",      fmt_currency(total_merch))
+c9.metric("Top Opponent",     truncate(top_opp, 16))
+c10.metric("Top Fan Segment", truncate(top_loyalty, 18))
 
 st.markdown("---")
 
@@ -110,7 +111,7 @@ with row1_col1:
                   title="Monthly Revenue Trend (All Seasons)",
                   color_discrete_sequence=["#0068c9","#ff6b6b","#ffd166"])
     fig.update_layout(xaxis_tickangle=-45, height=380)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
 
 # Revenue breakdown (pie)
 with row1_col2:
@@ -122,7 +123,7 @@ with row1_col2:
         hole=0.45
     ))
     fig2.update_layout(title="Revenue Breakdown by Category", height=380)
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2)
 
 row2_col1, row2_col2 = st.columns(2)
 
@@ -135,7 +136,7 @@ with row2_col1:
                   color="capacity_pct", color_continuous_scale="Blues",
                   labels={"total_revenue":"Total Revenue","label":"Game","capacity_pct":"Capacity %"})
     fig3.update_layout(height=380)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3)
 
 # Top 10 opponents by avg attendance
 with row2_col2:
@@ -145,7 +146,7 @@ with row2_col2:
                   orientation="h", title="Top 10 Opponents by Avg Capacity %",
                   color="Avg Capacity %", color_continuous_scale="Greens")
     fig4.update_layout(height=380)
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4)
 
 # Attendance vs capacity scatter
 st.markdown("### Attendance vs Capacity by Game")
@@ -158,4 +159,4 @@ fig5 = px.scatter(
     labels={"actual_attendance":"Actual Attendance","total_revenue":"Total Revenue"}
 )
 fig5.update_layout(height=420)
-st.plotly_chart(fig5, use_container_width=True)
+st.plotly_chart(fig5)

@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
+from src.utils import fmt_currency, truncate
 
 st.set_page_config(page_title="Ticket Revenue", layout="wide")
 
@@ -54,10 +55,10 @@ best_st      = df.groupby("segment_name")["sell_through_rate"].mean().idxmax()
 avg_price    = df["avg_ticket_price"].mean()
 
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total Net Ticket Revenue", f"${total_net:,.0f}")
-c2.metric("Avg Revenue per Game",     f"${avg_per_game:,.0f}")
-c3.metric("Best Segment by Revenue",  best_seg)
-c4.metric("Highest Sell-Through Seg", best_st)
+c1.metric("Total Net Ticket Revenue", fmt_currency(total_net))
+c2.metric("Avg Revenue per Game",     fmt_currency(avg_per_game))
+c3.metric("Best Segment by Revenue",  truncate(best_seg, 14))
+c4.metric("Highest Sell-Through Seg", truncate(best_st, 14))
 c5.metric("Avg Ticket Price",         f"${avg_price:.2f}")
 
 st.markdown("---")
@@ -75,7 +76,7 @@ with col1:
                  labels={"segment_name":"Segment","net_ticket_revenue":"Net Revenue"})
     fig.update_xaxes(tickangle=-35)
     fig.update_layout(height=380)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
 
 seg_st = df.groupby("segment_name")["sell_through_rate"].mean().reset_index().sort_values("sell_through_rate", ascending=False)
 with col2:
@@ -85,7 +86,7 @@ with col2:
                   labels={"segment_name":"Segment","sell_through_rate":"Sell-Through %"})
     fig2.update_xaxes(tickangle=-35)
     fig2.update_layout(height=380)
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2)
 
 col3, col4 = st.columns(2)
 
@@ -99,7 +100,7 @@ with col3:
                   orientation="h", title="Ticket Revenue by Opponent (Top 12)",
                   color="Net Revenue", color_continuous_scale="Purples")
     fig3.update_layout(height=380)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3)
 
 promo_rev = df.groupby("promotion_type")["net_ticket_revenue"].mean().reset_index().sort_values("net_ticket_revenue", ascending=False)
 with col4:
@@ -109,7 +110,7 @@ with col4:
                   labels={"promotion_type":"Promotion","net_ticket_revenue":"Avg Net Revenue"})
     fig4.update_xaxes(tickangle=-35)
     fig4.update_layout(height=380)
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4)
 
 # Discount vs revenue scatter
 st.markdown("### Discount Rate vs Net Ticket Revenue by Segment")
@@ -119,7 +120,7 @@ fig5 = px.scatter(sample, x="discount_pct", y="net_ticket_revenue",
                   title="Discount % vs Net Ticket Revenue",
                   labels={"discount_pct":"Discount %","net_ticket_revenue":"Net Ticket Revenue"})
 fig5.update_layout(height=400)
-st.plotly_chart(fig5, use_container_width=True)
+st.plotly_chart(fig5)
 
 # ---------------------------------------------------------------------------
 # Table
@@ -144,6 +145,5 @@ st.dataframe(
         "segment_name":"Segment","tickets_sold":"Tickets Sold",
         "avg_ticket_price":"Avg Price","net_ticket_revenue":"Net Revenue",
         "sell_through_rate":"Sell-Through %"
-    }),
-    use_container_width=True
+    })
 )

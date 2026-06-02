@@ -9,6 +9,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
+from src.utils import fmt_currency
 
 st.set_page_config(page_title="Concessions & Merchandise", layout="wide")
 
@@ -70,8 +71,8 @@ top_con_cat     = con.groupby("category")["gross_revenue"].sum().idxmax()
 top_merch_cat   = mer.groupby("category")["gross_revenue"].sum().idxmax()
 
 c1, c2, c3, c4, c5, c6 = st.columns(6)
-c1.metric("Total Concession Revenue",  f"${total_con_rev:,.0f}")
-c2.metric("Total Merchandise Revenue", f"${total_merch_rev:,.0f}")
+c1.metric("Total Concession Rev",      fmt_currency(total_con_rev))
+c2.metric("Total Merchandise Rev",     fmt_currency(total_merch_rev))
 c3.metric("Avg Concession/Attendee",   f"${avg_con_cap:.2f}")
 c4.metric("Avg Merchandise/Attendee",  f"${avg_merch_cap:.2f}")
 c5.metric("Top Concession Category",   top_con_cat)
@@ -92,7 +93,7 @@ with col1:
                  labels={"value":"Amount","variable":"Metric"},
                  color_discrete_sequence=["#0068c9","#ff6b6b"])
     fig.update_layout(height=380)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
 
 merch_cat = mer.groupby("category")[["gross_revenue","gross_margin"]].sum().reset_index()
 with col2:
@@ -102,7 +103,7 @@ with col2:
                   labels={"value":"Amount","variable":"Metric"},
                   color_discrete_sequence=["#ffd166","#06d6a0"])
     fig2.update_layout(height=380)
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2)
 
 col3, col4 = st.columns(2)
 
@@ -117,7 +118,7 @@ with col3:
                   category_orders={"attendance_tier":["Low","Medium","High","Sellout"]},
                   labels={"per_cap_game":"Per-Cap Spend","attendance_tier":"Attendance Tier"})
     fig3.update_layout(height=380)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3)
 
 # Inventory recommendations
 inv_df = (
@@ -134,7 +135,7 @@ with col4:
                   color="attendance_tier",
                   color_discrete_map={"Low":"#ff9999","Medium":"#ffd166","High":"#06d6a0","Sellout":"#0068c9"})
     fig4.update_layout(height=380)
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4)
 
 # ---------------------------------------------------------------------------
 # Inventory table
@@ -160,6 +161,5 @@ st.dataframe(
         "attendance_tier":"Tier","total_con_rev":"Concession Rev","con_per_cap":"Con/Cap",
         "total_con_inventory":"Con Inventory","total_merch_rev":"Merch Rev",
         "merch_per_cap":"Merch/Cap","total_merch_inventory":"Merch Inventory"
-    }),
-    use_container_width=True
+    })
 )
