@@ -9,9 +9,20 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import DATA_PROCESSED_DIR, DATA_SIMULATED_DIR
-from src.utils import fmt_currency
 
 st.set_page_config(page_title="Concessions & Merchandise", layout="wide")
+
+def fmt_currency(v: float) -> str:
+    a = abs(v)
+    if a >= 1_000_000_000: return f"${v / 1_000_000_000:.2f}B"
+    if a >= 1_000_000:     return f"${v / 1_000_000:.1f}M"
+    if a >= 1_000:         return f"${v / 1_000:.1f}K"
+    return f"${v:,.0f}"
+
+def truncate(text: str, max_len: int = 18) -> str:
+    text = str(text)
+    return text if len(text) <= max_len else text[:max_len - 1] + "…"
+
 
 
 @st.cache_data(show_spinner=False)
